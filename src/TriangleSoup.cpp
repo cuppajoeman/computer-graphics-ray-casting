@@ -6,10 +6,8 @@
 bool TriangleSoup::intersect(
   const Ray & ray, const double min_t, double & t, Eigen::Vector3d & n) const
 {
-  ////////////////////////////////////////////////////////////////////////////
-  // Replace with your code here:
-  return false;
-  ////////////////////////////////////////////////////////////////////////////
+  int throwaway_hit_id;
+  return first_hit( ray, min_t, triangles, throwaway_hit_id, t, n);
 }
 
 
