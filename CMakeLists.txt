@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(raycasting)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Prepare the build environment
 set(ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 option(USE_SOLUTION "Use solution"  OFF)
