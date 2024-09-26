@@ -3,6 +3,9 @@ project(raycasting)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+
 # Prepare the build environment
 set(ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 option(USE_SOLUTION "Use solution"  OFF)

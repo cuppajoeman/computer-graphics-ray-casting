@@ -3,34 +3,31 @@
 #include <Eigen/Dense>
 
 bool Triangle::intersect(
-  const Ray & ray, const double min_t, double & t, Eigen::Vector3d & n) const
+  const Ray & ray, const double min_t, double & t, Eigen::Matrix<double, 3, 1> & n) const
 {
-  auto c0 = std::get<0>(corners);
-  auto c1 = std::get<1>(corners);
-  auto c2 = std::get<2>(corners);
-  
-  auto ta = c1 - c0;
-  auto tb = c2 - c0;
+  const Eigen::Matrix<double, 3, 1>& c0 = std::get<0>(corners);
+  const Eigen::Matrix<double, 3, 1>& c1 = std::get<1>(corners);
+  const Eigen::Matrix<double, 3, 1>& c2 = std::get<2>(corners);
 
-  // we require that e + d*t = alpha ta + beta tb + c0
-  // this implies that:
-  // e - c0 = alpha ta + beta tb - dt
-  // that can be written in matrix form b = Ax then invert
+  Eigen::Matrix<double, 3, 1> ta = c1 - c0;
+  Eigen::Matrix<double, 3, 1> tb = c2 - c0;
 
-  Eigen::Matrix3d A;
-  A.col(0) = ta;
-  A.col(1) = tb;
-  A.col(2) = -ray.direction;
+  Eigen::Matrix<double, 3, 3> A;
+  A.col(0).noalias() = ta;
+  A.col(1).noalias() = tb;
+  A.col(2).noalias() = -ray.direction;  // use noalias to avoid temporary
 
-  Eigen::Vector3d b = ray.origin - c0;
+  Eigen::Matrix<double, 3, 1> b = ray.origin - c0;
 
 
-  // could occur if triangle is paralell with ray
-  if (not A.fullPivLu().isInvertible()) {
-    return false;
-  } 
-
-  Eigen::Vector3d solution = A.colPivHouseholderQr().solve(b);
+// could occur if triangle is paralell with ray
+  /*if (not A.fullPivLu().isInvertible()) {*/
+  /*  return false;*/
+  /*} */
+  /**/
+  /*Eigen::Vector3d solution = A.colPivHouseholderQr().solve(b);*/
+  /**/
+  Eigen::Matrix<double, 3, 1> solution = A.lu().solve(b);
 
   double alpha = solution[0];
   double beta = solution[1];
@@ -40,7 +37,7 @@ bool Triangle::intersect(
     return false;
   }
 
-  n = ta.cross(tb).normalized();
+  n.noalias() = ta.cross(tb).normalized();  // use noalias for in-place cross product
 
   return true;
 }
